@@ -8,6 +8,7 @@ public class Polyglote extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
     }
 
     @Override

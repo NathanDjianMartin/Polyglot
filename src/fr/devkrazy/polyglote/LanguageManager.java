@@ -15,7 +15,6 @@ public class LanguageManager {
     public LanguageManager(String path, JavaPlugin plugin) {
         this.path = path;
         this.languages = new HashMap<>();
-        this.languages.put("FR", new Language("FR", plugin));
     }
 
     /**
