@@ -1,3 +1,8 @@
 name: Polyglote
 main: fr.devkrazy.polyglote.Polyglote
 version: 0.1
+commands:
+  language:
+    description: Language command
+    usage: /language <language>
+    aliases: [lang, l, langue]
