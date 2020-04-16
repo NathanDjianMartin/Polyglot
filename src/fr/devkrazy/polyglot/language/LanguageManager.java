@@ -1,4 +1,4 @@
-package fr.devkrazy.polyglote.language;
+package fr.devkrazy.polyglot.language;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class LanguageManager {
      */
 
     private static LanguageManager instance;
-    private HashMap<UUID, Language> playerLanguages;
+    private HashMap<UUID, String> playerLanguages;
     private HashMap<JavaPlugin, PluginLanguageManager> plugins;
 
 
@@ -31,12 +31,12 @@ public class LanguageManager {
     // = = = Players = = =
 
     /**
-     * Sets a player's language using it's unique id.
+     * Sets a player's language using it's unique id and the language ISO 639-1 code.
      * @param uuid the player's unique id
-     * @param language the player's future language
+     * @param languageName the player's future language
      */
-    public void setLanguage(UUID uuid, Language language) {
-        this.playerLanguages.put(uuid, language);
+    public void setLanguage(UUID uuid, String languageName) {
+        this.playerLanguages.put(uuid, languageName);
     }
 
     /**
@@ -44,7 +44,7 @@ public class LanguageManager {
      * @param uuid the player's unique id
      * @return the player's language
      */
-    public Language getLanguage(UUID uuid) {
+    public String getLanguage(UUID uuid) {
         return this.playerLanguages.get(uuid);
     }
 

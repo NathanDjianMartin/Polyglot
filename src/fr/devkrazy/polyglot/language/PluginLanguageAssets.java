@@ -1,4 +1,4 @@
-package fr.devkrazy.polyglote.language;
+package fr.devkrazy.polyglot.language;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

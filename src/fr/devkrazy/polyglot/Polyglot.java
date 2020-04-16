@@ -1,13 +1,11 @@
-package fr.devkrazy.polyglote;
+package fr.devkrazy.polyglot;
 
-import fr.devkrazy.polyglote.language.LanguageManager;
+import fr.devkrazy.polyglot.language.LanguageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Polyglote extends JavaPlugin {
+public class Polyglot extends JavaPlugin {
 
     @Override
     public void onEnable() {

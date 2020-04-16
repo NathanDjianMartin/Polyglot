@@ -1,6 +1,6 @@
-package fr.devkrazy.polyglote.language;
+package fr.devkrazy.polyglot.language;
 
-import fr.devkrazy.polyglote.utils.CustomConfig;
+import fr.devkrazy.polyglot.utils.CustomConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;

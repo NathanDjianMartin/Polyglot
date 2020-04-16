@@ -1,4 +1,4 @@
-package fr.devkrazy.polyglote.language;
+package fr.devkrazy.polyglot.language;
 
 import java.io.File;
 import java.util.HashMap;

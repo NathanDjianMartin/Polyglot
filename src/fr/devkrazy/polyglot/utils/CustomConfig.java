@@ -1,4 +1,4 @@
-package fr.devkrazy.polyglote.utils;
+package fr.devkrazy.polyglot.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
