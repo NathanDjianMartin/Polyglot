@@ -1,5 +1,8 @@
 package fr.devkrazy.polyglot.utils;
 
+import fr.devkrazy.polyglot.language.Language;
+import fr.devkrazy.polyglot.language.LanguageManager;
+import fr.devkrazy.polyglot.language.PluginLanguageManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,11 +20,23 @@ public class CustomConfig {
     public CustomConfig(JavaPlugin plugin, String name) {
         this.plugin = plugin;
         this.name = name;
+        this.saveDefaultConfig();
         this.reload();
+        //this.save();
     }
 
     /**
-     *
+     * @return the FileConfiguration instance
+     */
+    public FileConfiguration getConfig() {
+        if (customConfig == null) {
+            reload();
+        }
+        return customConfig;
+    }
+
+    /**
+     * Reloads the config.
      */
     public void reload() {
         if (customConfigFile == null) {
@@ -45,15 +60,12 @@ public class CustomConfig {
         }
     }
 
-    public FileConfiguration getConfig() {
-        if (customConfig == null) {
-            reload();
-        }
-        return customConfig;
-    }
-
-    public void saveCustomConfig() {
+    /**
+     * Saves the config.
+     */
+    public void save() {
         if (customConfig == null || customConfigFile == null) {
+            // Either the customConfig of customConfigFile is null so we can't save the config
             return;
         }
         try {
@@ -63,12 +75,41 @@ public class CustomConfig {
         }
     }
 
+    /**
+     * Saves the default config (from the jar) to the data folder if the current config file does not exist.
+     */
     public void saveDefaultConfig() {
         if (customConfigFile == null) {
-            customConfigFile = new File(plugin.getDataFolder(), "language_FR.yml");
+            // We create a new file instance so we can save the default config into this file
+            customConfigFile = new File(plugin.getDataFolder(), this.name);
         }
         if (!customConfigFile.exists()) {
-            plugin.saveResource("language_FR.yml", false);
+            // If
+            plugin.saveResource(this.name, false);
+        }
+    }
+
+    /**
+     * Reloads all the language configs of all registered plugins.
+     */
+    public static void reloadAllLanguageConfigs() {
+        LanguageManager lm = LanguageManager.getInstance();
+        for (PluginLanguageManager plm : lm.getPluginLanguageManagers()) {
+            for (Language language : plm.getLanguages()) {
+                language.getLanguageConfig().reload();
+            }
+        }
+    }
+
+    /**
+     * Saves all the language configs of all registered plugins.
+     */
+    public static void saveAllLanguageConfigs() {
+        LanguageManager lm = LanguageManager.getInstance();
+        for (PluginLanguageManager plm : lm.getPluginLanguageManagers()) {
+            for (Language language : plm.getLanguages()) {
+                language.getLanguageConfig().save();
+            }
         }
     }
 }

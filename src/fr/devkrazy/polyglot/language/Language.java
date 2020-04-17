@@ -19,8 +19,7 @@ public class Language {
 
 
         // Creates the config from the correct file name
-        this.languageConfig = new CustomConfig(plugin, "language_" + this.name);
-        this.languageConfig.reload();
+        this.languageConfig = new CustomConfig(plugin, "language_" + this.name + ".yml");
 
         // Associates each message key with its corresponding message from the custom config
         for (String messageKey : pluginLanguageAssets.getMessagesKeys()) {
@@ -43,5 +42,13 @@ public class Language {
      */
     public String getMessage(String messageKey) {
         return this.messages.get(messageKey);
+    }
+
+    /**
+     * Returns the custom config of the current language.
+     * @return the custom config instance
+     */
+    public CustomConfig getLanguageConfig() {
+        return this.languageConfig;
     }
 }
