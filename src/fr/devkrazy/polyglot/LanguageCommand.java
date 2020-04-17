@@ -18,19 +18,69 @@ public class LanguageCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         CustomConfig playersLanguageConfig = Polyglot.getPlayersLanguagesConfig();
         LanguageManager lm = LanguageManager.getInstance();
-        if (args[0].equalsIgnoreCase("set")) {
-            if (args.length == 3) {
+
+        if (args.length >= 1) {
+            if (args[0].equalsIgnoreCase("set")) {
+                if (args.length == 3) {
+                    Player player = Bukkit.getPlayer(args[1]);
+                    if (player != null) {
+                        lm.setLanguageName(player.getUniqueId(), args[2]);
+                        playersLanguageConfig.getConfig().set(player.getUniqueId().toString(), args[2]);
+                        sender.sendMessage("§a" + player.getName() + " language is now " + args[2] + ".");
+                    } else {
+                        sender.sendMessage("§c" + args[1] + " is either offline or doesn't exist. Please try with an online player.");
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("see")) {
                 Player player = Bukkit.getPlayer(args[1]);
                 if (player != null) {
-                    lm.setLanguageName(player.getUniqueId(), args[2].toUpperCase()); //TODO check que uppercase casse rien
-                    sender.sendMessage("§c" + player.getName() + "'s (" + player.getUniqueId() + ") language is now " + args[2].toUpperCase() + ".");
+                    String playerLang = playersLanguageConfig.getConfig().getString(player.getUniqueId().toString());
+                    sender.sendMessage("§a" + player.getName() + " language is " + playerLang);
                 } else {
                     sender.sendMessage("§c" + args[1] + " is either offline or doesn't exist. Please try with an online player.");
                 }
-            } else {
-                return false;
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("reload")) {
+                if (args.length == 1) {
+                    playersLanguageConfig.reload();
+                    sender.sendMessage("§aReloaded the players_languages.yml config.");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("save")) {
+                if (args.length == 1) {
+                    playersLanguageConfig.save();
+                    sender.sendMessage("§aSaved the players_languages.yml config.");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("help")) {
+                if (args.length == 1) {
+                    sender.sendMessage("§6Polyglot §e\"/language\"§6 command help :");
+                    sender.sendMessage("§6- /language set <player> <language ISO code> §7sets a player's language");
+                    sender.sendMessage("§6- /language see <player> §7displays a player's language");
+                    sender.sendMessage("§6- /language reload §7reloads the players language config");
+                    sender.sendMessage("§6- /language save §7saves the players language config");
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+
         return false;
     }
 }

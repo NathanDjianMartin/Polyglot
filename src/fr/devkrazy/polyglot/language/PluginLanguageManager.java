@@ -1,11 +1,8 @@
 package fr.devkrazy.polyglot.language;
 
-import org.bukkit.entity.Player;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,9 +29,8 @@ public class PluginLanguageManager {
             if (matcher.find()) {
                 languageName = matcher.group(1); // "XX", the ISO 639-1 part of the file name language_XX.
             } else {
-                this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.WARNING, "The file " + languageFile.getName() + " is badly named. Must be language_XX.yml");
+                this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The file " + languageFile.getName() + " is badly named. Must be language_XX.yml");
             }
-            languageName = languageName.toUpperCase(); //TODO check que ça ne casse rien
             this.languages.put(languageName, new Language(languageName, this.pluginLanguageAssets));
         }
     }
@@ -56,37 +52,18 @@ public class PluginLanguageManager {
     }
 
     /**
-     * Sends a message to a player in the correct language.
-     * @param player the player
+     * Returns a message in a specified language
+     * @param languageName the language ISO 639-1 code
      * @param messageKey the message key
+     * @return the message in the correct language
      */
-    public void sendMessage(Player player, String messageKey) {
-        UUID uuid = player.getUniqueId();
-        String playerLanguageName = LanguageManager.getInstance().getLanguageName(uuid);
-        Language playerLanguage = this.getLanguage(playerLanguageName);
-
-        player.sendMessage(playerLanguage.getMessage(messageKey));
-    }
-
-    /**
-     * Sends a message to a player in the correct language with the possibility to add
-     * Object instances to replace the placeholders of the message.
-     * The number of objects must be equal to the number of placeholders in the message.
-     * In addition the given object's toString() method should be correctly implemented
-     * because this method will call the toString() method.
-     * @param player the player
-     * @param messageKey the message key
-     */
-    public void sendFormattedMessage(Player player, String messageKey, Object[] data) {
-        UUID uuid = player.getUniqueId();
-        String playerLanguageName = LanguageManager.getInstance().getLanguageName(uuid);
-        Language playerLanguage = this.getLanguage(playerLanguageName);
-        String message = playerLanguage.getMessage(messageKey);
-
-        Pattern pattern = Pattern.compile("");
-        Matcher matcher = pattern.matcher(message);
-        if (matcher.find()) {
-
+    public String getMessage(String messageKey, String languageName) {
+        languageName = languageName;
+        if (this.languages.containsKey(languageName)) {
+            return this.languages.get(languageName).getMessage(messageKey);
+        } else {
+            this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The language " + languageName + " doesn't exist.");
+            return "§cThe language " + languageName + " doesn't exist. Please report this immediately yo a staff member.";
         }
     }
 }

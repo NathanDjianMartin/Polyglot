@@ -9,20 +9,22 @@ import java.util.logging.Level;
 public class Language {
 
     private String name;
+    private PluginLanguageAssets pluginLanguageAssets;
     private HashMap<String, String> messages;
     private CustomConfig languageConfig;
 
     public Language(String name, PluginLanguageAssets pluginLanguageAssets) {
         this.name = name;
+        this.pluginLanguageAssets = pluginLanguageAssets;
         this.messages = new HashMap<>();
-        JavaPlugin plugin = pluginLanguageAssets.getJavaPlugin();
+        JavaPlugin plugin = this.pluginLanguageAssets.getJavaPlugin();
 
 
         // Creates the config from the correct file name
         this.languageConfig = new CustomConfig(plugin, "language_" + this.name + ".yml");
 
         // Associates each message key with its corresponding message from the custom config
-        for (String messageKey : pluginLanguageAssets.getMessagesKeys()) {
+        for (String messageKey : this.pluginLanguageAssets.getMessagesKeys()) {
             String message = this.languageConfig.getConfig().getString(messageKey);
             // Associates a message even using its key to retrieve the message from the language file
             if (message != null) {
@@ -41,7 +43,12 @@ public class Language {
      * @return the message
      */
     public String getMessage(String messageKey) {
-        return this.messages.get(messageKey);
+        if (this.messages.containsKey(messageKey)) {
+            return this.messages.get(messageKey);
+        } else {
+            this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The message " + messageKey + " doesn't exist in language " + this.name + ".");
+            return "§cThe message " + messageKey + " doesn't exist in language "+ this.name + " . Please report this immediately yo a staff member.";
+        }
     }
 
     /**

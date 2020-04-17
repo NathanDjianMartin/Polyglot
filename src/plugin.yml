@@ -1,7 +1,7 @@
 name: Polyglot
 main: fr.devkrazy.polyglot.Polyglot
-version: 0.1
-command:
+version: 1.0
+commands:
   language:
     description: Polyglot's language command.
     usage: /language <help>

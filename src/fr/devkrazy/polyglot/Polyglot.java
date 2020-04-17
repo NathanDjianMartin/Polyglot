@@ -22,6 +22,7 @@ public class Polyglot extends JavaPlugin {
     @Override
     public void onDisable() {
         CustomConfig.saveAllLanguageConfigs();
+        playersLanguages.save();
         this.getLogger().log(Level.INFO, "Polyglot successfully disabled!");
     }
 
@@ -32,7 +33,6 @@ public class Polyglot extends JavaPlugin {
         return playersLanguages;
     }
 
-    /*
     public static void main(String[] args) {
         File languageFile = new File("Le groupe {0} et {1} existent sur le serveur, {2} !");
         Pattern pattern = Pattern.compile("(\\{[0-9]\\})");
@@ -43,5 +43,4 @@ public class Polyglot extends JavaPlugin {
             i++;
         }
     }
-     */
 }
