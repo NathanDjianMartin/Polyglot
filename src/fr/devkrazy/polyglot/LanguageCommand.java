@@ -24,7 +24,7 @@ public class LanguageCommand implements CommandExecutor {
                 if (args.length == 3) {
                     Player player = Bukkit.getPlayer(args[1]);
                     if (player != null) {
-                        lm.setLanguageName(player.getUniqueId(), args[2]);
+                        lm.setlanguageISOCode(player.getUniqueId(), args[2]);
                         playersLanguageConfig.getConfig().set(player.getUniqueId().toString(), args[2]);
                         sender.sendMessage("§e" + player.getName() + "§6 language is now §e" + args[2] + "§6.");
                     } else {
@@ -39,7 +39,7 @@ public class LanguageCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("see")) {
                 Player player = Bukkit.getPlayer(args[1]);
                 if (player != null) {
-                    String playerLang = LanguageManager.getInstance().getLanguageName(player.getUniqueId());
+                    String playerLang = LanguageManager.getInstance().getlanguageISOCode(player.getUniqueId());
                     sender.sendMessage("§e" + player.getName() + "§6 language is §e" + playerLang + "§6.");
                 } else {
                     sender.sendMessage("§4" + args[1] + "§c is either offline or doesn't exist. Please try with an online player.");

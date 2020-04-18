@@ -14,8 +14,8 @@ public class PluginLanguageManager {
 
     /**
      * A PluginLanguageManager manages every language of a plugin. For each supported language, a plugin has
-     * its own instance of these languages. The PluginLanguageManager's role is to make sure that each supported
-     * language has a Language instance.
+     * its own instance of a language. The PluginLanguageManager's role is to make sure that each supported
+     * language has a Language instance. It is also used to retrieve or send messages to players
      */
 
     private HashMap<String, Language> languages;
@@ -32,13 +32,13 @@ public class PluginLanguageManager {
         for (File languageFile : this.pluginLanguageAssets.getLanguagesFiles()) {
             Pattern pattern = Pattern.compile("language_([a-zA-Z][a-zA-Z]).yml");
             Matcher matcher = pattern.matcher(languageFile.getName());
-            String languageName = "--";
+            String languageISOCode = "--";
             if (matcher.find()) {
-                languageName = matcher.group(1); // "xx", the ISO 639-1 part of the file name language_xx.
+                languageISOCode = matcher.group(1); // "xx", the ISO 639-1 part of the file name language_xx.
             } else {
                 this.plugin.getLogger().log(Level.SEVERE, "The file " + languageFile.getName() + " is badly named. Must be language_xx.yml");
             }
-            this.languages.put(languageName, new Language(languageName, this.pluginLanguageAssets));
+            this.languages.put(languageISOCode, new Language(languageISOCode, this.pluginLanguageAssets));
         }
     }
 
@@ -60,16 +60,40 @@ public class PluginLanguageManager {
 
     /**
      * Returns a message in a specified language
-     * @param languageName the language ISO 639-1 code
+     * @param languageISOCode the language ISO 639-1 code
      * @param messageKey the message key
      * @return the message in the correct language
      */
-    private String getMessage(String messageKey, String languageName) {
-        if (this.languages.containsKey(languageName)) {
-            return this.getLanguage(languageName).getMessage(messageKey);
+    private String getMessage(String messageKey, String languageISOCode) {
+        if (this.languages.containsKey(languageISOCode)) {
+            return this.getLanguage(languageISOCode).getMessage(messageKey);
         } else {
-            return "The language " + languageName + " in the plugin " + this.plugin.getName() + " doesn't exist.";
+            return "The language " + languageISOCode + " in the plugin " + this.plugin.getName() + " doesn't exist.";
         }
+    }
+
+    /**
+     * Returns a message in a player's language
+     * @param player the player whose language will be used to retrieve the message
+     * @param messageKey the message key
+     * @return the message in the correct language for the player
+     */
+    public String getMessage(Player player, String messageKey) {
+        String languageISOCode = this.languageManager.getlanguageISOCode(player.getUniqueId());
+        return this.getMessage(messageKey, languageISOCode);
+    }
+
+    /**
+     * Returns a message with parameters in a player's correct language.
+     * This method uses Java's String.format method to inject the parameters. The initial message should
+     * respect Java String format convention.
+     * @param player the player whose language will be used to retrieve the message
+     * @param messageKey the message key
+     * @param parameters the parameters to inject in the message
+     * @return the message with the included parameters in the player's language
+     */
+    public String getMessageWithParameters(Player player, String messageKey, Object... parameters) {
+        return String.format(this.getMessage(player, messageKey), parameters);
     }
 
     /**
@@ -78,9 +102,7 @@ public class PluginLanguageManager {
      * @param messageKey the message key
      */
     public void sendMessage(Player player, String messageKey) {
-        String languageName = this.languageManager.getLanguageName(player.getUniqueId());
-        String message = this.getMessage(messageKey, languageName);
-        player.sendMessage(message);
+        player.sendMessage(this.getMessage(player, messageKey));
     }
 
     /**
@@ -92,8 +114,8 @@ public class PluginLanguageManager {
      * @param parameters the parameters to inject in the message
      */
     public void sendMessageWithParameters(Player player, String messageKey, Object... parameters) {
-        String languageName = this.languageManager.getLanguageName(player.getUniqueId());
-        String message = this.getMessage(messageKey, languageName);
+        String languageISOCode = this.languageManager.getlanguageISOCode(player.getUniqueId());
+        String message = this.getMessage(messageKey, languageISOCode);
         player.sendMessage(String.format(message, parameters));
     }
 }

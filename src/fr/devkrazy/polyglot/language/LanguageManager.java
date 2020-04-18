@@ -35,10 +35,10 @@ public class LanguageManager {
     /**
      * Sets a player's language using it's unique id and the language ISO 639-1 code.
      * @param uuid the player's unique id
-     * @param languageName the player's future language
+     * @param languageISOCode the player's future language
      */
-    public void setLanguageName(UUID uuid, String languageName) {
-        this.playerLanguages.put(uuid, languageName);
+    public void setlanguageISOCode(UUID uuid, String languageISOCode) {
+        this.playerLanguages.put(uuid, languageISOCode);
     }
 
     /**
@@ -56,7 +56,7 @@ public class LanguageManager {
             playersLanguageConfig.getConfig().set(uuid.toString(), playerLanguage);
             playersLanguageConfig.save();
         }
-        this.setLanguageName(uuid, playerLanguage);
+        this.setlanguageISOCode(uuid, playerLanguage);
     }
 
     /**
@@ -72,7 +72,7 @@ public class LanguageManager {
      * @param uuid the player's unique id
      * @return the player's language
      */
-    public String getLanguageName(UUID uuid) {
+    public String getlanguageISOCode(UUID uuid) {
         return this.playerLanguages.get(uuid);
     }
 

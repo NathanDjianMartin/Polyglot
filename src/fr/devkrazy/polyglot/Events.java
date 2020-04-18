@@ -18,6 +18,7 @@ public class Events implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        Polyglot.getPlayersLanguagesConfig().save();
         LanguageManager.getInstance().unsetLanguage(player.getUniqueId());
     }
 }
