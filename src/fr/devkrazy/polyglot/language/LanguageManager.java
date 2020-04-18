@@ -1,8 +1,14 @@
 package fr.devkrazy.polyglot.language;
 
+import fr.devkrazy.polyglot.Polyglot;
+import fr.devkrazy.polyglot.utils.CustomConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class LanguageManager {
 
@@ -19,6 +25,9 @@ public class LanguageManager {
     public LanguageManager() {
         this.playerLanguages = new HashMap<>();
         this.plugins = new HashMap<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.loadLanguage(player.getUniqueId());
+        }
     }
 
     // = = = Players = = =
@@ -30,6 +39,32 @@ public class LanguageManager {
      */
     public void setLanguageName(UUID uuid, String languageName) {
         this.playerLanguages.put(uuid, languageName);
+    }
+
+    /**
+     * Loads a player's language from the config and saves the config.
+     * @param uuid the player's unique id
+     */
+    public void loadLanguage(UUID uuid) {
+        CustomConfig playersLanguageConfig = Polyglot.getPlayersLanguagesConfig();
+        String playerLanguage = playersLanguageConfig.getConfig().getString(uuid.toString());
+
+        // This happens if the player is not in the players_languages.yml file.
+        if (playerLanguage == null) {
+            // Sets the player default language to the config and saves it.
+            playerLanguage = "en"; //TODO use a default value stored in a config file
+            playersLanguageConfig.getConfig().set(uuid.toString(), playerLanguage);
+            playersLanguageConfig.save();
+        }
+        this.setLanguageName(uuid, playerLanguage);
+    }
+
+    /**
+     * Unsets a player's language.
+     * @param uuid the player's unique id
+     */
+    public void unsetLanguage(UUID uuid) {
+        this.playerLanguages.remove(uuid);
     }
 
     /**
@@ -48,17 +83,10 @@ public class LanguageManager {
      * @param plugin
      * @param pluginLanguageAssets
      */
-    public void registerPlugin(JavaPlugin plugin, PluginLanguageAssets pluginLanguageAssets) {
-        this.plugins.put(plugin, new PluginLanguageManager(pluginLanguageAssets));
-    }
-
-    /**
-     * Returns a plugin's associated PluginLanguageManager.
-     * @param plugin the plugin
-     * @return the PluginLanguageManager
-     */
-    public PluginLanguageManager getPluginLanguageManager(JavaPlugin plugin) {
-        return this.plugins.get(plugin);
+    public PluginLanguageManager registerPlugin(JavaPlugin plugin, PluginLanguageAssets pluginLanguageAssets) {
+        PluginLanguageManager pluginLanguageManager = new PluginLanguageManager(pluginLanguageAssets);
+        this.plugins.put(plugin, pluginLanguageManager);
+        return pluginLanguageManager;
     }
 
     /**

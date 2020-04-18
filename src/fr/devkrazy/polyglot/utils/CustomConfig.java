@@ -22,7 +22,7 @@ public class CustomConfig {
         this.name = name;
         this.saveDefaultConfig();
         this.reload();
-        //this.save();
+        this.save();
     }
 
     /**

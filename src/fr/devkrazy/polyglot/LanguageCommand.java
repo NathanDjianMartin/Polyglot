@@ -26,9 +26,9 @@ public class LanguageCommand implements CommandExecutor {
                     if (player != null) {
                         lm.setLanguageName(player.getUniqueId(), args[2]);
                         playersLanguageConfig.getConfig().set(player.getUniqueId().toString(), args[2]);
-                        sender.sendMessage("§a" + player.getName() + " language is now " + args[2] + ".");
+                        sender.sendMessage("§e" + player.getName() + "§6 language is now §e" + args[2] + "§6.");
                     } else {
-                        sender.sendMessage("§c" + args[1] + " is either offline or doesn't exist. Please try with an online player.");
+                        sender.sendMessage("§4" + args[1] + "§c is either offline or doesn't exist. Please try with an online player.");
                     }
                     return true;
                 } else {
@@ -39,10 +39,10 @@ public class LanguageCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("see")) {
                 Player player = Bukkit.getPlayer(args[1]);
                 if (player != null) {
-                    String playerLang = playersLanguageConfig.getConfig().getString(player.getUniqueId().toString());
-                    sender.sendMessage("§a" + player.getName() + " language is " + playerLang);
+                    String playerLang = LanguageManager.getInstance().getLanguageName(player.getUniqueId());
+                    sender.sendMessage("§e" + player.getName() + "§6 language is §e" + playerLang + "§6.");
                 } else {
-                    sender.sendMessage("§c" + args[1] + " is either offline or doesn't exist. Please try with an online player.");
+                    sender.sendMessage("§4" + args[1] + "§c is either offline or doesn't exist. Please try with an online player.");
                 }
                 return true;
             }
@@ -50,7 +50,8 @@ public class LanguageCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (args.length == 1) {
                     playersLanguageConfig.reload();
-                    sender.sendMessage("§aReloaded the players_languages.yml config.");
+                    CustomConfig.reloadAllLanguageConfigs();
+                    sender.sendMessage("§6Reloaded all config files.");
                     return true;
                 } else {
                     return false;
@@ -60,7 +61,8 @@ public class LanguageCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("save")) {
                 if (args.length == 1) {
                     playersLanguageConfig.save();
-                    sender.sendMessage("§aSaved the players_languages.yml config.");
+                    CustomConfig.saveAllLanguageConfigs();
+                    sender.sendMessage("§6Saved the all config files.");
                     return true;
                 } else {
                     return false;
@@ -72,8 +74,8 @@ public class LanguageCommand implements CommandExecutor {
                     sender.sendMessage("§6Polyglot §e\"/language\"§6 command help :");
                     sender.sendMessage("§6- /language set <player> <language ISO code> §7sets a player's language");
                     sender.sendMessage("§6- /language see <player> §7displays a player's language");
-                    sender.sendMessage("§6- /language reload §7reloads the players language config");
-                    sender.sendMessage("§6- /language save §7saves the players language config");
+                    sender.sendMessage("§6- /language reload §7reloads all the config files");
+                    sender.sendMessage("§6- /language save §7saves all config files");
                     return true;
                 } else {
                     return false;

@@ -21,7 +21,8 @@ public class Language {
 
 
         // Creates the config from the correct file name
-        this.languageConfig = new CustomConfig(plugin, "language_" + this.name + ".yml");
+        String fileName = "language_" + this.name + ".yml";
+        this.languageConfig = new CustomConfig(plugin, fileName);
 
         // Associates each message key with its corresponding message from the custom config
         for (String messageKey : this.pluginLanguageAssets.getMessagesKeys()) {
@@ -30,8 +31,8 @@ public class Language {
             if (message != null) {
                 messages.put(messageKey, message);
             } else {
-                messages.put(messageKey, messageKey + " is not defined for the language " + this.name + ", please report this message to a staff member.");
-                plugin.getLogger().log(Level.WARNING, "The message " + messageKey + " has no associated message in the language " + this.name + ".");
+                messages.put(messageKey, "§cThe message §4" + messageKey + "§c is not defined in the file §4" + fileName + "§c. Please report this message to a staff member.");
+                plugin.getLogger().log(Level.WARNING, "The message " + messageKey + " is not defined in the file " + fileName);
             }
         }
     }
@@ -43,12 +44,7 @@ public class Language {
      * @return the message
      */
     public String getMessage(String messageKey) {
-        if (this.messages.containsKey(messageKey)) {
-            return this.messages.get(messageKey);
-        } else {
-            this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The message " + messageKey + " doesn't exist in language " + this.name + ".");
-            return "§cThe message " + messageKey + " doesn't exist in language "+ this.name + " . Please report this immediately yo a staff member.";
-        }
+        return this.messages.get(messageKey);
     }
 
     /**

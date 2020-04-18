@@ -1,5 +1,8 @@
 package fr.devkrazy.polyglot.language;
 
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,19 +20,23 @@ public class PluginLanguageManager {
 
     private HashMap<String, Language> languages;
     private PluginLanguageAssets pluginLanguageAssets;
+    private LanguageManager languageManager;
+    private JavaPlugin plugin;
 
     public PluginLanguageManager(PluginLanguageAssets pluginLanguageAssets) {
         this.languages = new HashMap<>();
         this.pluginLanguageAssets = pluginLanguageAssets;
+        this.languageManager = LanguageManager.getInstance();
+        this.plugin = this.pluginLanguageAssets.getJavaPlugin();
 
         for (File languageFile : this.pluginLanguageAssets.getLanguagesFiles()) {
             Pattern pattern = Pattern.compile("language_([a-zA-Z][a-zA-Z]).yml");
             Matcher matcher = pattern.matcher(languageFile.getName());
             String languageName = "--";
             if (matcher.find()) {
-                languageName = matcher.group(1); // "XX", the ISO 639-1 part of the file name language_XX.
+                languageName = matcher.group(1); // "xx", the ISO 639-1 part of the file name language_xx.
             } else {
-                this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The file " + languageFile.getName() + " is badly named. Must be language_XX.yml");
+                this.plugin.getLogger().log(Level.SEVERE, "The file " + languageFile.getName() + " is badly named. Must be language_xx.yml");
             }
             this.languages.put(languageName, new Language(languageName, this.pluginLanguageAssets));
         }
@@ -57,13 +64,36 @@ public class PluginLanguageManager {
      * @param messageKey the message key
      * @return the message in the correct language
      */
-    public String getMessage(String messageKey, String languageName) {
-        languageName = languageName;
+    private String getMessage(String messageKey, String languageName) {
         if (this.languages.containsKey(languageName)) {
-            return this.languages.get(languageName).getMessage(messageKey);
+            return this.getLanguage(languageName).getMessage(messageKey);
         } else {
-            this.pluginLanguageAssets.getJavaPlugin().getLogger().log(Level.SEVERE, "The language " + languageName + " doesn't exist.");
-            return "§cThe language " + languageName + " doesn't exist. Please report this immediately yo a staff member.";
+            return "The language " + languageName + " in the plugin " + this.plugin.getName() + " doesn't exist.";
         }
+    }
+
+    /**
+     * Sends a message to a player in the correct language.
+     * @param player the target of the message
+     * @param messageKey the message key
+     */
+    public void sendMessage(Player player, String messageKey) {
+        String languageName = this.languageManager.getLanguageName(player.getUniqueId());
+        String message = this.getMessage(messageKey, languageName);
+        player.sendMessage(message);
+    }
+
+    /**
+     * Sends a message with parameters to a player in the correct language.
+     * This method uses Java's String.format method to inject the parameters. The initial message should
+     * respect Java String format convention.
+     * @param player the target of the message
+     * @param messageKey the message key
+     * @param parameters the parameters to inject in the message
+     */
+    public void sendMessageWithParameters(Player player, String messageKey, Object... parameters) {
+        String languageName = this.languageManager.getLanguageName(player.getUniqueId());
+        String message = this.getMessage(messageKey, languageName);
+        player.sendMessage(String.format(message, parameters));
     }
 }
