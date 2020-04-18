@@ -26,9 +26,9 @@ You can create as much files as you want. You must put those files at the same l
 
  ### The PluginLanguageAssets interface
  Then you have to create a class which implements the `PluginLanguageAssets` interface. This interface has three methods:
- - 'Set<String> getMessageKeys();`
- - 'Set<File> getLanguagesFiles();`
- - 'JavaPlugin getPlugin();`
+ - `Set<String> getMessageKeys();`
+ - `Set<File> getLanguagesFiles();`
+ - `JavaPlugin getPlugin();`
 
 Here is an example of how you could override those methods:
 
@@ -105,6 +105,12 @@ And here is our `MessageKey` enum:
  }
  ```
  
+ ### Setting and a player's language using code
+ Even if you can use the in-game command `/language set <player> <language ISO 639-1 code>` to set a player's language. You may want to include this functionnality in a plugin. To set a language simply do:
+ ```java
+ LanguageManager.getInstance().setLanguageName(UUID playerUniqueId, String languageISOCode);
+ ```
+ 
  ### Sending messages to players
  Congratulation! You are now ready to send your messages. That's where your `PluginLanguageManager` becomes important. He has all the methods to send messages to players. You have currently two ways of sending messages to a player. You can either send the raw message from the language file or send a message where you integrate some parameters.
  ```java
@@ -152,6 +158,7 @@ Now it is time to use our `PluginLanguageManager` in two concrete cases. We are 
 ### Limitations
 Polyglot has currently a few limitations that you want to be aware of.
 - When a player connects to the server, if the player never joined the server or simply saved in the `players_lanuages.yml` file, its default language will be set to `en`. It means that all of your server plugins which use Polyglot must support the english language. In the future you will be able to change the default language in configuration file. 
+- A player cannot set its own language, you must provide a plugin which will set a player's language or manually set it using the `/language set <player> <language ISO 639-1 code>` in-game command.
  
 ### Conclusion
 You have learned how to use Polyglot to easily add multi-languages support to your plugins. If you have any issue or recommandation feel free to private message me. 
