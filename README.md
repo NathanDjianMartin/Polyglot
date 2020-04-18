@@ -121,7 +121,7 @@ And here is our `MessageKey` enum:
  pluginLanguageManager.sendMessageWithParameters(Player player, String messageKey, Object... parameters);
 ```
 
-Thanks to Polyglot you don't how to worry in which language the message will be sent, your `PluginLanguageManager` will take care of this. However, you must understand how Java String format placeholders work. 
+Thanks to Polyglot you don't have to worry in which language the message will be sent, your `PluginLanguageManager` will take care of this. However, you must understand how Java String format placeholders work. 
 
 Now it is time to use our `PluginLanguageManager` in two concrete cases. We are going to use the two messages of our example `language_en.yml` file from the beginning. Lets suppose that we want to prevent players without the `block.break` permission to break blocks on the server. When they try to break a block and the event is cancelled, we want to inform them that they don't have the permission, so we send him the `permission-denied` message when he tries to break a block:
  ```java
