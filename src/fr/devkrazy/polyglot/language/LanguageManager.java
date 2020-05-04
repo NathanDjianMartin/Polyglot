@@ -3,6 +3,7 @@ package fr.devkrazy.polyglot.language;
 import fr.devkrazy.polyglot.Polyglot;
 import fr.devkrazy.polyglot.utils.CustomConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -85,6 +86,17 @@ public class LanguageManager {
      */
     public PluginLanguageManager registerPlugin(JavaPlugin plugin, PluginLanguageAssets pluginLanguageAssets) {
         PluginLanguageManager pluginLanguageManager = new PluginLanguageManager(pluginLanguageAssets);
+        this.plugins.put(plugin, pluginLanguageManager);
+        return pluginLanguageManager;
+    }
+
+    /**
+     * Register a plugin by giving it's pluginLanguageAssets.
+     * @param plugin
+     * @param pluginLanguageAssets
+     */
+    public PluginLanguageManager registerPlugin(JavaPlugin plugin, PluginLanguageAssets pluginLanguageAssets, ChatColor basicColor, ChatColor highlightColor, ChatColor positiveColor, ChatColor negativeColor) {
+        PluginLanguageManager pluginLanguageManager = new PluginLanguageManager(pluginLanguageAssets, basicColor, highlightColor, positiveColor, negativeColor);
         this.plugins.put(plugin, pluginLanguageManager);
         return pluginLanguageManager;
     }
