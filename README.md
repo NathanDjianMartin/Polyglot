@@ -106,7 +106,7 @@ And here is our `MessageKey` enum:
  }
  ```
  
- ### Setting and a player's language using code
+ ### Setting a player's language using code
  Even if you can use the in-game command `/language set <player> <language ISO 639-1 code>` to set a player's language, you may want to also include this functionality in a plugin. To set a player's language, simply do the following:
  ```java
  LanguageManager.getInstance().setLanguageName(UUID playerUniqueId, String languageISOCode);
