@@ -5,18 +5,18 @@ Please note that Polyglot uses the [**ISO 639-1**](https://en.wikipedia.org/wiki
 
 ## Polyglot _/language_ command
 Polyglot comes with the /language command to manually manage a player's language.
-- `/language help` displays in-game help for the command
-- `/language set <player> <language ISO 639-1 code>` sets a player's language using the language's ISO 639-1 code
-- `/language see <player>` displays a player's language
-- `/language reload`reloads the player_languages.yml file and all the plugin's language files
-- `/language save`saves the player_languages.yml file and all the plugin's language files
+- `/language help` displays in-game help for the command - permission: `polyglot.language.help`
+- `/language set <player> <language ISO 639-1 code>` sets a player's language using the language's ISO 639-1 code - permission: `polyglot.language.set`
+- `/language see <player>` displays a player's language - permission: `polyglot.language.see`
+- `/language reload`reloads the player_languages.yml file and all the plugin's language files - permission: `polyglot.language.reload`
+- `/language save`saves the player_languages.yml file and all the plugin's language files - permission: `polyglot.language.save`
 Please note that currently, you can only use this command with online players. Support for offline players will be added in the future.
 
  ## Polyglot for plugin developpers
  This section describes all the requirements your plugin has to comply with to correctly work with Polyglot. It is now assumed that you imported Polyglot as a dependency in your favorite IDE.
  
  ### Creating your language files
- The first thing you need to do is to create at least one language file. Language files must comply with the following naming convention: `language_xx.yml`, where you replace *xx* with the language [**ISO 639-1**](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. A language file is a `.yml` file which associates a message key with a message value in this language. For example if you want to create a file for english messages you have to name it `language_en.yml`. Let's take a look at our example `language_en.yml` file:
+ The first thing you need to do is to create at least one language file. Language files must comply with the following naming convention: `language_xx.yml`, where you replace *xx* with the language [**ISO 639-1**](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. You must use lower case caracters when writing the **ISO-639-1** code to your language file. A language file is a `.yml` file which associates a message key with a message value in this language. For example if you want to create a file for english messages you have to name it `language_en.yml`. Let's take a look at our example `language_en.yml` file:
  
  ```yaml
  #language_en.yml
@@ -112,7 +112,7 @@ And here is our `MessageKey` enum:
  LanguageManager.getInstance().setLanguageName(UUID playerUniqueId, String languageISOCode);
  ```
  
- ### Sending messages to players
+ ### Manipulating messages
  Congratulation! You are now ready to send your messages. This where you need your `PluginLanguageManager`. There are currently two methods for sending messages to a player. You can either send a raw message from the language file, or, send a message which contains dynamic parameter values.
  ```java
  PluginLanguageManager pluginLanguageManager = ... // get your PluginLanguageManager instance
@@ -156,10 +156,18 @@ Now is the time to use our `PluginLanguageManager` in two practical examples. We
  ```
  In the `PlayerJoinEvent` example, the placeholder `%1$s` from the `welcome` message will be replaced by the player's name because `%1$` means the first parameter and `s`means that it is a `String`. Again, the Java documentation will detail which placeholders you can use and how to use them. You can define as many parameters as you like after the `messageKey` parameter, indeed the last parameter's type is `Object...`. 
  
+If you don't want to send the message to a player but rather display it using an other way *(e.g.: in a boss bar, an hologram, as an ItemStack lore...)* you can use the following methods:
+ ```java 
+ pluginLanguageManager.getMessage(Player player, String messageKey);
+ 
+ pluginLanguageManager.getMessageWithParameters(Player player, String messageKey, Object... parameters);
+```
+These methods will work exactly like the ones used to send a message, but instead of sending the message to the player they will return the formatted message in the player's language.
+ 
 ### Limitations
 Polyglot has the following limitations:
 - When a player connects to the server, if the player never joined the server, or was not saved in the `players_lanuages.yml` file, its default language will be set to `en` (english). This means that all your server plugins which use Polyglot must support the english language. In the future, you will be able to change the default language in a configuration file. 
-- A player cannot set their own language, you must use the `setLanguageName(UUID playerUniqueID)` method in your plugin code, or manually set it in-game using the `/language set <player> <language ISO 639-1 code>` command.
+- A player cannot set their own language, you must use the `setPlayerLanguageISOCode(UUID playerUniqueID)` method in your plugin code, or manually set it in-game using the `/language set <player> <language ISO 639-1 code>` command. You could create an Inventory GUI which calls the `setPlayerLanguageISOCode(UUID playerUniqueID)` when a player clicks on a certain item.
  
 ### Conclusion
 You can now use Polyglot to easily add multi-language support to your plugins. If you have any issue or recommandation, feel free to private message me. 
