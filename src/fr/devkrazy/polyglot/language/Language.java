@@ -4,7 +4,6 @@ import fr.devkrazy.polyglot.utils.CustomConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 public class Language {
 
@@ -32,7 +31,7 @@ public class Language {
             } else {
                 // Associates a message even if it isn't set in the config file
                 messages.put(messageKey, "§cThe message §4" + messageKey + "§c is not defined in the file §4" + fileName + "§c. Please report this message to a staff member.");
-                plugin.getLogger().log(Level.WARNING, "The message " + messageKey + " is not defined in the file " + fileName);
+                plugin.getLogger().warning("The message " + messageKey + " is not defined in the file " + fileName);
             }
         }
     }

@@ -6,7 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +36,7 @@ public class PluginLanguageManager {
                 languageISOCode = matcher.group(1); // "xx", the ISO 639-1 part of the file name language_xx.
                 this.languages.put(languageISOCode, new Language(languageISOCode, this.pluginLanguageAssets));
             } else {
-                this.plugin.getLogger().log(Level.SEVERE, "The file " + languageFile.getName() + " is badly named. Must be language_xx.yml");
+                this.plugin.getLogger().severe("The file " + languageFile.getName() + " is badly named. Must be language_xx.yml");
             }
         }
     }

@@ -3,8 +3,6 @@ package fr.devkrazy.polyglot;
 import fr.devkrazy.polyglot.utils.CustomConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Level;
-
 public class Polyglot extends JavaPlugin {
 
     private static CustomConfig playersLanguages;
@@ -14,14 +12,14 @@ public class Polyglot extends JavaPlugin {
         playersLanguages = new CustomConfig(this, "players_languages.yml"); // TODO use database
         this.getCommand("language").setExecutor(new LanguageCommand());
         this.getServer().getPluginManager().registerEvents(new Events(), this);
-        this.getLogger().log(Level.INFO, "Polyglot successfully enabled!");
+        this.getLogger().info("Polyglot successfully enabled!");
     }
 
     @Override
     public void onDisable() {
         CustomConfig.saveAllLanguageConfigs();
         playersLanguages.save();
-        this.getLogger().log(Level.INFO, "Polyglot successfully disabled!");
+        this.getLogger().info("Polyglot successfully disabled!");
     }
 
     /**
