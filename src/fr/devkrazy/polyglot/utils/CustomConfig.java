@@ -1,16 +1,24 @@
+/*
+ * Copyright (c) 2020.
+ *
+ * This project (Holobroadcast) and this file is part of Romain Storaï (_Rolyn) and Nathan Djian-Martin (DevKrazy)
+ *
+ * Holobroadcast cannot be copied and/or distributed without the express permission of Romain Storaï (_Rolyn) and Nathan Djian-Martin (DevKrazy)
+ */
+
 package fr.devkrazy.polyglot.utils;
 
 import fr.devkrazy.polyglot.language.Language;
 import fr.devkrazy.polyglot.language.LanguageManager;
 import fr.devkrazy.polyglot.language.PluginLanguageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.util.logging.Level;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class CustomConfig {
@@ -18,13 +26,15 @@ public class CustomConfig {
     private JavaPlugin plugin;
     private Logger logger;
     private String name;
-    private File customConfigFile;
-    private FileConfiguration customConfig;
+    private File configFile;
+    private FileConfiguration config;
 
     public CustomConfig(JavaPlugin plugin, String name) {
         this.plugin = plugin;
         this.logger = this.plugin.getLogger();
         this.name = name;
+        this.configFile = new File(this.plugin.getDataFolder() + "/" + this.name);
+        this.config = YamlConfiguration.loadConfiguration(this.configFile);
         this.saveDefaultConfig();
         this.reload();
         this.save();
@@ -34,76 +44,47 @@ public class CustomConfig {
      * @return the FileConfiguration instance
      */
     public FileConfiguration getConfig() {
-        if (customConfig == null) {
+        if (this.config == null) {
             this.reload();
         }
-        return customConfig;
+        return this.config;
     }
 
     /**
      * Reloads the config.
      */
     public void reload() {
-        if (customConfigFile == null) {
-            // Creates an EMPTY file object in case there isn't one
-            // This happens the first time or if the file has been deleted
-            customConfigFile = new File(plugin.getDataFolder(), this.name);
-            try {
-                customConfigFile.createNewFile();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error while creating the new file " + this.name + ": " + e.getMessage());
-            }
-        }
-        // Loads the file into the FileConfiguration instance (delegates to Bukkit)
-        customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-
         try {
-            customConfig.load(customConfigFile);
-        } catch (FileNotFoundException fnfe) {
-            logger.log(Level.SEVERE, "File not found while loading config " + customConfig.getName() + ": " + fnfe.getMessage());
-        } catch (IOException ioe) {
-            logger.log(Level.SEVERE, "IOException while loading config " + customConfig.getName() + ": " + ioe.getMessage());
-        } catch (InvalidConfigurationException ice) {
-            logger.log(Level.SEVERE, "Config " + customConfig.getName() + " is invalid: " + ice.getMessage());
-        }
-
-        // Look for defaults in the jar
-        try {
-            Reader defConfigStream = new InputStreamReader(plugin.getResource(this.name), "UTF8");
-            if (defConfigStream != null) {
-                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-                customConfig.setDefaults(defConfig);
-            }
-        } catch (UnsupportedEncodingException e) {
-            // The developer must provide UTF8 files!
-            logger.log(Level.SEVERE, "The file " + this.name + " embedded in " + plugin.getName() + "'s jar is not UTF8: " + e.getMessage());
+            this.config.load(this.configFile);
+        } catch (InvalidConfigurationException e) {
+            this.logger.severe("The configuration " + this.name + " is invalid. " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            this.logger.severe("The file " + this.name + " was not found. " + e.getMessage());
+        } catch (IOException e) {
+            this.logger.severe("IOException with config " + this.name + ": " + e.getMessage());
         }
     }
-
     /**
      * Saves the config.
      */
     public void save() {
-        if (customConfig == null || customConfigFile == null) {
-            // Either the customConfig of customConfigFile is null so we can't save the config
-            return;
-        }
         try {
-            getConfig().save(customConfigFile);
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + customConfigFile, ex);
+            this.config.save(configFile);
+        } catch (IOException e) {
+           this.logger.severe("Could not save config to " + this.name + ": " + e.getMessage());
         }
     }
 
     /**
-     * Saves the default config (from the jar) to the data folder if the current config file does not exist.
+     * Saves the default config (from the jar) to the data folder
+     * if, and only if, the current config file does not exist.
      */
     public void saveDefaultConfig() {
-        if (customConfigFile == null) {
+        if (configFile == null) {
             // We create a new file instance so we can save the default config into this file
-            customConfigFile = new File(plugin.getDataFolder(), this.name);
+            configFile = new File(plugin.getDataFolder(), this.name);
         }
-        if (!customConfigFile.exists()) {
+        if (!configFile.exists()) {
             // If the filed doesn't exist we create a new one using the plugin's resource file
             plugin.saveResource(this.name, false);
         }
@@ -117,10 +98,8 @@ public class CustomConfig {
         for (PluginLanguageManager plm : lm.getPluginLanguageManagers()) {
             for (Language language : plm.getLanguages()) {
                 CustomConfig config = language.getLanguageConfig();
-                config.saveDefaultConfig();
                 config.reload();
                 config.save();
-                Bukkit.broadcastMessage("§4" + config.getConfig().getName() + " reoaded!");
             }
         }
     }
