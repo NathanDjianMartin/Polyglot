@@ -5,4 +5,4 @@ commands:
   language:
     description: Polyglot's language command.
     usage: /language <help>
-    aliases: [lang, l]
+    aliases: [lang]

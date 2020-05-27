@@ -11,7 +11,7 @@ public class Polyglot extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        playersLanguages = new CustomConfig(this, "players_languages.yml");
+        playersLanguages = new CustomConfig(this, "players_languages.yml"); // TODO use database
         this.getCommand("language").setExecutor(new LanguageCommand());
         this.getServer().getPluginManager().registerEvents(new Events(), this);
         this.getLogger().log(Level.INFO, "Polyglot successfully enabled!");
@@ -30,5 +30,4 @@ public class Polyglot extends JavaPlugin {
     public static CustomConfig getPlayersLanguagesConfig() {
         return playersLanguages;
     }
-
 }

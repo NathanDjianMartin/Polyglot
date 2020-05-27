@@ -3,7 +3,6 @@ package fr.devkrazy.polyglot.language;
 import fr.devkrazy.polyglot.Polyglot;
 import fr.devkrazy.polyglot.utils.CustomConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,7 +26,7 @@ public class LanguageManager {
         this.playerLanguages = new HashMap<>();
         this.plugins = new HashMap<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            this.loadLanguage(player.getUniqueId());
+            this.loadPlayerLanguage(player.getUniqueId());
         }
     }
 
@@ -38,7 +37,7 @@ public class LanguageManager {
      * @param uuid the player's unique id
      * @param languageISOCode the player's future language
      */
-    public void setlanguageISOCode(UUID uuid, String languageISOCode) {
+    public void setPlayerLanguageISOCode(UUID uuid, String languageISOCode) {
         this.playerLanguages.put(uuid, languageISOCode);
     }
 
@@ -46,7 +45,7 @@ public class LanguageManager {
      * Loads a player's language from the config and saves the config.
      * @param uuid the player's unique id
      */
-    public void loadLanguage(UUID uuid) {
+    public void loadPlayerLanguage(UUID uuid) {
         CustomConfig playersLanguageConfig = Polyglot.getPlayersLanguagesConfig();
         String playerLanguage = playersLanguageConfig.getConfig().getString(uuid.toString());
 
@@ -57,14 +56,14 @@ public class LanguageManager {
             playersLanguageConfig.getConfig().set(uuid.toString(), playerLanguage);
             playersLanguageConfig.save();
         }
-        this.setlanguageISOCode(uuid, playerLanguage);
+        this.setPlayerLanguageISOCode(uuid, playerLanguage);
     }
 
     /**
      * Unsets a player's language.
      * @param uuid the player's unique id
      */
-    public void unsetLanguage(UUID uuid) {
+    public void unsetPlayerLanguage(UUID uuid) {
         this.playerLanguages.remove(uuid);
     }
 
@@ -73,14 +72,14 @@ public class LanguageManager {
      * @param uuid the player's unique id
      * @return the player's language
      */
-    public String getlanguageISOCode(UUID uuid) {
+    public String getPlayerLanguageISOCode(UUID uuid) {
         return this.playerLanguages.get(uuid);
     }
 
     // = = = Plugins = = =
 
     /**
-     * Register a plugin by giving it's pluginLanguageAssets.
+     * Registers a plugin by giving it's pluginLanguageAssets.
      * @param plugin
      * @param pluginLanguageAssets
      */
@@ -91,25 +90,14 @@ public class LanguageManager {
     }
 
     /**
-     * Register a plugin by giving it's pluginLanguageAssets.
-     * @param plugin
-     * @param pluginLanguageAssets
-     */
-    public PluginLanguageManager registerPlugin(JavaPlugin plugin, PluginLanguageAssets pluginLanguageAssets, ChatColor basicColor, ChatColor highlightColor, ChatColor positiveColor, ChatColor negativeColor) {
-        PluginLanguageManager pluginLanguageManager = new PluginLanguageManager(pluginLanguageAssets, basicColor, highlightColor, positiveColor, negativeColor);
-        this.plugins.put(plugin, pluginLanguageManager);
-        return pluginLanguageManager;
-    }
-
-    /**
-     * @return a Collection containing all the registered PluginLanguageManagers
+     * @return a Collection containing all the registered PluginLanguageManagers.
      */
     public Collection<PluginLanguageManager> getPluginLanguageManagers() {
         return this.plugins.values();
     }
 
     /**
-     * @return the LanguageManager instance
+     * @return the LanguageManager's instance.
      */
     public static LanguageManager getInstance() {
         if (instance == null) {

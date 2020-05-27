@@ -27,10 +27,10 @@ public class Language {
         // Associates each message key with its corresponding message from the custom config
         for (String messageKey : this.pluginLanguageAssets.getMessagesKeys()) {
             String message = this.languageConfig.getConfig().getString(messageKey);
-            // Associates a message even using its key to retrieve the message from the language file
             if (message != null) {
                 messages.put(messageKey, message);
             } else {
+                // Associates a message even if it isn't set in the config file
                 messages.put(messageKey, "§cThe message §4" + messageKey + "§c is not defined in the file §4" + fileName + "§c. Please report this message to a staff member.");
                 plugin.getLogger().log(Level.WARNING, "The message " + messageKey + " is not defined in the file " + fileName);
             }
