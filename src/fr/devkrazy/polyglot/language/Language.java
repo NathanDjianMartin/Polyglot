@@ -7,20 +7,20 @@ import java.util.HashMap;
 
 public class Language {
 
-    private String name;
+    private String isoCode;
     private PluginLanguageAssets pluginLanguageAssets;
     private HashMap<String, String> messages;
     private CustomConfig languageConfig;
 
-    public Language(String name, PluginLanguageAssets pluginLanguageAssets) {
-        this.name = name;
+    public Language(String isoCode, PluginLanguageAssets pluginLanguageAssets) {
+        this.isoCode = isoCode;
         this.pluginLanguageAssets = pluginLanguageAssets;
         this.messages = new HashMap<>();
         JavaPlugin plugin = this.pluginLanguageAssets.getJavaPlugin();
 
 
         // Creates the config from the correct file name
-        String fileName = "language_" + this.name + ".yml";
+        String fileName = "language_" + this.isoCode + ".yml";
         this.languageConfig = new CustomConfig(plugin, fileName);
 
         // Associates each message key with its corresponding message from the custom config
@@ -29,7 +29,7 @@ public class Language {
             if (message != null) {
                 messages.put(messageKey, message);
             } else {
-                // Associates a message even if it isn't set in the config file
+                // Associates an error message if it isn't set in the config file
                 messages.put(messageKey, "§cThe message §4" + messageKey + "§c is not defined in the file §4" + fileName + "§c. Please report this message to a staff member.");
                 plugin.getLogger().warning("The message " + messageKey + " is not defined in the file " + fileName);
             }

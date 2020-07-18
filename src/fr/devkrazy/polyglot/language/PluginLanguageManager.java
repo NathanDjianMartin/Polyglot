@@ -53,6 +53,12 @@ public class PluginLanguageManager {
         return this.languages.get(key);
     }
 
+    public Language getLanguage(Player player) {
+        String playerLocale = player.getLocale();
+        System.out.println(playerLocale);
+        return this.languages.get(playerLocale);
+    }
+
     /**
      * @return a Collection of all the registered languages
      */
@@ -95,7 +101,7 @@ public class PluginLanguageManager {
      * @return the message in the correct language for the player
      */
     public String getMessage(Player player, String messageKey) {
-        String languageISOCode = this.languageManager.getPlayerLanguageISOCode(player.getUniqueId());
+        String languageISOCode = this.languageManager.getPlayerLanguageISOCode(player);
         return this.getMessage(messageKey, languageISOCode);
     }
 
@@ -109,7 +115,7 @@ public class PluginLanguageManager {
      * @return the message with the included parameters in the player's language
      */
     public String getMessageWithParameters(Player player, String messageKey, Object... parameters) {
-        String languageISOCode = this.languageManager.getPlayerLanguageISOCode(player.getUniqueId());
+        String languageISOCode = this.languageManager.getPlayerLanguageISOCode(player);
         return this.getMessageWithParameters(messageKey, languageISOCode, parameters);
     }
 

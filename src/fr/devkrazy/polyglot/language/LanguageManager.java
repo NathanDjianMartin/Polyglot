@@ -69,10 +69,11 @@ public class LanguageManager {
 
     /**
      * Returns a player's language name using it's unique id.
-     * @param uuid the player's unique id
+     * @param player the player
      * @return the player's language
      */
-    public String getPlayerLanguageISOCode(UUID uuid) {
+    public String getPlayerLanguageISOCode(Player player) {
+        UUID uuid = player.getUniqueId();
         return this.playerLanguages.get(uuid);
     }
 

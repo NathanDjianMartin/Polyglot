@@ -40,7 +40,7 @@ public class LanguageCommand implements CommandExecutor {
                 if (sender.hasPermission("polyglot.language.see")) {
                     Player player = Bukkit.getPlayer(args[1]);
                     if (player != null) {
-                        String playerLang = LanguageManager.getInstance().getPlayerLanguageISOCode(player.getUniqueId());
+                        String playerLang = LanguageManager.getInstance().getPlayerLanguageISOCode(player);
                         sender.sendMessage("§e" + player.getName() + "§6 language is §e" + playerLang + "§6.");
                     } else {
                         sender.sendMessage("§4" + args[1] + "§c is either offline or doesn't exist. Please try with an online player.");
